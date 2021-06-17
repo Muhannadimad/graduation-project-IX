@@ -5,7 +5,7 @@ from numpy import long
 
 import cv2
 import os
-from object-map-genaration.aws_request import process_text_analysis
+
 
 def load_images_from_folder(folder):
     images = []
