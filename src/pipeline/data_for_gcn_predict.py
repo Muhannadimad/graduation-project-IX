@@ -1,13 +1,14 @@
 import matplotlib.pyplot as plt
 
-from src.pipeline.graph import Grapher
+from src.pipeline.graph2 import Grapher
 import torch
 import scipy.sparse
 import torch_geometric.data
 import networkx as nx
 import numpy as np
-import os 
+import os
 import random
+
 
 def from_networkx(G):
     """Converts a :obj:`networkx.Graph` or :obj:`networkx.DiGraph` to a
@@ -55,13 +56,14 @@ def from_networkx(G):
         try:
             data[key] = torch.tensor(item)
         except ValueError:
-            pass 
+            pass
 
     data['edge_index'] = edge_index.view(2, -1)
     data = torch_geometric.data.Data.from_dict(data)
     data.num_nodes = G.number_of_nodes()
     # print(data, "mm")
     return data
+
 
 def get_data():
     """
@@ -70,15 +72,15 @@ def get_data():
     - edge_index (LongTensor, optional) – Graph connectivity in COO format with shape [2, num_edges]. (default: None)
     - edge_attr (Tensor, optional) – Edge feature matrix with shape [num_edges, num_edge_features]. (default: None)
     - y (Tensor, optional) – Graph or node targets with arbitrary shape. (default: None)
-    - validation mask, training mask and testing mask 
+    - validation mask, training mask and testing mask
     """
-    path = "../../data/raw2/box/"
-    l=os.listdir(path)
-    files=[x.split('.')[0] for x in l]
+    path = "../../data/raw2/box_predict/"
+    l = os.listdir(path)
+    files = [x.split('.')[0] for x in l]
     # print(files, "bef")
     files.sort()
 
-    all_files = files[1:]
+    all_files = files[0:]
     # print(all_files)
     list_of_graphs = []
 
@@ -87,14 +89,13 @@ def get_data():
     random.shuffle(files)
 
     r"""Resulting in 500 receipts for training, 63 receipts for validation, and 63 for testing."""
-    training,testing,validating = files[1:15],files[15:],files[0]
-
+    training, testing, validating = [], [], files[0:]
 
     for file in all_files:
-        print("xxxxxxxxxxxxxxxxxxx" , file)
+        print("xxxxxxxxxxxxxxxxxxx", file)
         connect = Grapher(file)
 
-        G,_,_ = connect.graph_formation()
+        G, _, _ = connect.graph_formation()
         # draw
         # G = nx.from_dict_of_lists(graph_dict)
         # layout = nx.kamada_kawai_layout(G)
@@ -107,8 +108,8 @@ def get_data():
         # print(df)
         individual_data = from_networkx(G)
 
-        feature_cols = ['rd_b', 'rd_r', 'rd_t', 'rd_l','line_number',\
-                'n_upper', 'n_alpha', 'n_spaces', 'n_numeric','n_special']
+        feature_cols = ['rd_b', 'rd_r', 'rd_t', 'rd_l', 'line_number', \
+                        'n_upper', 'n_alpha', 'n_spaces', 'n_numeric', 'n_special']
 
         features = torch.tensor(df[feature_cols].values.astype(np.float32))
         # print(features.shape, "sh")
@@ -126,7 +127,8 @@ def get_data():
         # df.loc[df['labels'] == 'total', 'num_labels'] = 5
         df.loc[df['labels'] == 'undefined', 'num_labels'] = 3
         # print(df['num_labels'].isnull().values.any(), df )
-        assert df['num_labels'].isnull().values.any() == False, f'labeling error! Invalid label(s) present in {file}.csv'
+        assert df[
+                   'num_labels'].isnull().values.any() == False, f'labeling error! Invalid label(s) present in {file}.csv'
         labels = torch.tensor(df['num_labels'].values.astype(np.int64))
         # print(labels,"mahd")
         text = df['Object'].values
@@ -157,13 +159,14 @@ def get_data():
         g = torch_geometric.utils.to_networkx(individual_data, to_undirected=True)
         nx.draw(g)
         list_of_graphs.append(individual_data)
-    
-    data = torch_geometric.data.Batch.from_data_list(list_of_graphs)
-    data.edge_attr = None 
 
-    save_path = "../../data/processed/"  
-    torch.save(data, save_path +'data_withtexts2.dataset')
+    data = torch_geometric.data.Batch.from_data_list(list_of_graphs)
+    data.edge_attr = None
+
+    save_path = "../../data/processed/"
+    torch.save(data, save_path + 'data_withtexts_predict.dataset')
     print('Data is saved!')
+
 
 if __name__ == "__main__":
     get_data()

@@ -6,7 +6,7 @@ import pandas as pd
 
 """
 Note: This is an example for how to create a dataframe with bounding boxes for a document. It is for demonstration purposes. 
-For this project, 'ready-made' bounding box is used that is found in 'data/raw/box'.
+For this project, 'ready-made' bounding interim2 is used that is found in 'data/raw/interim2'.
 
 """
 image = "../../data/raw/img/339.jpg"
@@ -19,11 +19,11 @@ d = pytesseract.image_to_data(img, output_type=Output.DICT) #, config=custom_con
 print(d.keys())
 
 """
-left is the distance from the upper-left corner of the bounding box, to the left border of the image.
-top is the distance from the upper-left corner of the bounding box, to the top border of the image.
-width and height are the width and height of the bounding box.
-conf is the model's confidence for the prediction for the word within that bounding box.
-If conf is -1, that means that the corresponding bounding box contains a block of text, rather than just a single word.
+left is the distance from the upper-left corner of the bounding interim2, to the left border of the image.
+top is the distance from the upper-left corner of the bounding interim2, to the top border of the image.
+width and height are the width and height of the bounding interim2.
+conf is the model's confidence for the prediction for the word within that bounding interim2.
+If conf is -1, that means that the corresponding bounding interim2 contains a block of text, rather than just a single word.
 
 """
 #for graph modeling

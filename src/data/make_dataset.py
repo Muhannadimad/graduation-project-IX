@@ -3,7 +3,7 @@ from os import path, replace, scandir
 """
 This script is to format the raw data into proper formats: jpg, csv 
 jpg is the image file
-csv is the file containing the box cordinates
+csv is the file containing the interim2 cordinates
 """
 
 def noext(f):
@@ -27,4 +27,4 @@ for i, (f_jpg, f_csv) in enumerate(zip(jpg_files, csv_files)):
     print(f"{i:03d}", f_jpg, f_csv)
 
     replace(f_jpg.path, f"data/raw/img{i:03d}.jpg")
-    replace(f_csv.path, f"data/raw/box{i:03d}.csv")
+    replace(f_csv.path, f"data/raw/interim2{i:03d}.csv")

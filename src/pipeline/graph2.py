@@ -19,8 +19,8 @@ class Grapher:
 
     def __init__(self, filename):
         self.filename = filename
-        file_path = "../../data/raw2/box/" + filename + '.csv'
-        interim_path = "../../data/interim4/" + filename + '.csv'
+        file_path = "../../data/raw2/box_predict/" + filename + '.csv'
+        interim_path = "../../data/interim_predict/" + filename + '.csv'
         image_path = "../../data/raw2/img/" + filename + '.jpg'
         self.df = pd.read_csv(file_path, header=None, sep='\n')
         self.image = cv2.imread(image_path)
